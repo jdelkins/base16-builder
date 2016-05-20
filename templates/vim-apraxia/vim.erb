@@ -1,0 +1,339 @@
+<%
+# Vim Template
+# Chris Kempson (http://chriskempson.com)
+
+%>" Base16 <%= @scheme %> (https://github.com/chriskempson/base16)
+" Scheme: <%= @author %>
+
+" This enables the coresponding base16-shell script to run so that
+" :colorscheme works in terminals supported by base16-shell scripts
+" User must set this variable in .vimrc
+"   let g:base16_shell_path=base16-builder/output/shell/
+if !has('gui_running')
+  if exists('g:base16_shell_path')
+    execute 'silent !/bin/sh '.g:base16_shell_path.'/base16-<%= slug(@scheme) %>.'.&background.'.sh'
+  endif
+endif
+
+" GUI color definitions
+let s:gui00 = '<%= @base["00"]["hex"] %>'
+let s:gui01 = '<%= @base["01"]["hex"] %>'
+let s:gui02 = '<%= @base["02"]["hex"] %>'
+let s:gui03 = '<%= @base["03"]["hex"] %>'
+let s:gui04 = '<%= @base["04"]["hex"] %>'
+let s:gui05 = '<%= @base["05"]["hex"] %>'
+let s:gui06 = '<%= @base["06"]["hex"] %>'
+let s:gui07 = '<%= @base["07"]["hex"] %>'
+let s:gui08 = '<%= @base["08"]["hex"] %>'
+let s:gui09 = '<%= @base["09"]["hex"] %>'
+let s:gui0A = '<%= @base["0A"]["hex"] %>'
+let s:gui0B = '<%= @base["0B"]["hex"] %>'
+let s:gui0C = '<%= @base["0C"]["hex"] %>'
+let s:gui0D = '<%= @base["0D"]["hex"] %>'
+let s:gui0E = '<%= @base["0E"]["hex"] %>'
+let s:gui0F = '<%= @base["0F"]["hex"] %>'
+
+" Terminal color definitions
+let s:cterm00 = '00'
+let s:cterm03 = '08'
+let s:cterm05 = '07'
+let s:cterm07 = '15'
+let s:cterm08 = '01'
+let s:cterm0A = '03'
+let s:cterm0B = '02'
+let s:cterm0C = '06'
+let s:cterm0D = '04'
+let s:cterm0E = '05'
+if exists('base16colorspace') && base16colorspace == '256'
+  let s:cterm01 = '18'
+  let s:cterm02 = '19'
+  let s:cterm04 = '20'
+  let s:cterm06 = '21'
+  let s:cterm09 = '16'
+  let s:cterm0F = '17'
+else
+  let s:cterm01 = '10'
+  let s:cterm02 = '11'
+  let s:cterm04 = '12'
+  let s:cterm06 = '13'
+  let s:cterm09 = '09'
+  let s:cterm0F = '14'
+endif
+
+" Theme setup
+hi clear
+syntax reset
+let g:colors_name = 'base16-<%= @slug %>'
+
+" Highlighting function
+fun s:hi(group, guifg, guibg, ctermfg, ctermbg, attr, guisp)
+  if a:guifg !=# ""
+    exec 'hi ' . a:group . ' guifg=#' . s:gui(a:guifg)
+  endif
+  if a:guibg !=# ''
+    exec 'hi ' . a:group . ' guibg=#' . s:gui(a:guibg)
+  endif
+  if a:ctermfg !=# ''
+    exec 'hi ' . a:group . ' ctermfg=' . s:cterm(a:ctermfg)
+  endif
+  if a:ctermbg !=# ''
+    exec 'hi ' . a:group . ' ctermbg=' . s:cterm(a:ctermbg)
+  endif
+  if a:attr !=# ''
+    exec 'hi ' . a:group . ' gui=' . a:attr . " cterm=" . a:attr
+  endif
+  if a:guisp !=# ''
+    exec 'hi ' . a:group . ' guisp=#' . a:guisp
+  endif
+endfun
+
+" Return GUI color for light/dark variants
+fun s:gui(color)
+  if &background ==# 'dark'
+    return a:color
+  endif
+
+  if a:color ==# s:gui00
+    return s:gui07
+  elseif a:color ==# s:gui01
+    return s:gui06
+  elseif a:color ==# s:gui02
+    return s:gui05
+  elseif a:color ==# s:gui03
+    return s:gui04
+  elseif a:color ==# s:gui04
+    return s:gui03
+  elseif a:color ==# s:gui05
+    return s:gui02
+  elseif a:color ==# s:gui06
+    return s:gui01
+  elseif a:color ==# s:gui07
+    return s:gui00
+  endif
+
+  return a:color
+endfun
+
+" Return terminal color for light/dark variants
+fun s:cterm(color)
+  if &background ==# 'dark'
+    return a:color
+  endif
+
+  if a:color == s:cterm00
+    return s:cterm07
+  elseif a:color == s:cterm01
+    return s:cterm06
+  elseif a:color == s:cterm02
+    return s:cterm05
+  elseif a:color == s:cterm03
+    return s:cterm04
+  elseif a:color == s:cterm04
+    return s:cterm03
+  elseif a:color == s:cterm05
+    return s:cterm02
+  elseif a:color == s:cterm06
+    return s:cterm01
+  elseif a:color == s:cterm07
+    return s:cterm00
+  endif
+
+  return a:color
+endfun
+
+" Vim editor colors
+call s:hi('Bold',s:gui05,s:gui00,s:cterm05,s:cterm00,'bold','')
+call s:hi('Debug',s:gui08,s:gui00,s:cterm08,s:cterm00,'','')
+call s:hi('Directory',s:gui0D,s:gui00,s:cterm0D,s:cterm00,'','')
+call s:hi('Error',s:gui09,s:gui01,s:cterm09,s:cterm01,'','')
+call s:hi('ErrorMsg',s:gui00,s:gui08,s:cterm00,s:cterm08,'','')
+hi! link Exception Statement
+call s:hi('FoldColumn',s:gui02,s:gui01,s:cterm02,s:cterm01,'','')
+call s:hi('Folded',s:gui03,s:gui01,s:cterm03,s:cterm01,'','')
+call s:hi('IncSearch',s:gui00,s:gui0A,s:cterm00,s:cterm0A,'none','')
+call s:hi('Italic','','','','','italic','')
+hi! link Macro PreProc
+call s:hi('MatchParen',s:gui07,s:gui01,s:cterm07,s:cterm01,'','')
+call s:hi('ModeMsg',s:gui0B,s:gui00,s:cterm0B,s:cterm00,'','')
+call s:hi('MoreMsg',s:gui0B,s:gui00,s:cterm0B,s:cterm00,'','')
+call s:hi('Question',s:gui0D,s:gui00,s:cterm0D,s:cterm00,'','')
+call s:hi('Search',s:gui00,s:gui0A,s:cterm00,s:cterm0A,'','')
+call s:hi('SpecialKey',s:gui03,s:gui00,s:cterm03,s:cterm00,'','')
+call s:hi('TooLong',s:gui08,s:gui00,s:cterm08,s:cterm00,'','')
+call s:hi('Underlined',s:gui0D,s:gui00,s:cterm0D,s:cterm00,'underline','')
+call s:hi('Visual',s:gui05,s:gui0E,s:cterm05,s:cterm0E,'','')
+call s:hi('VisualNOS',s:gui08,s:gui00,s:cterm08,s:cterm00,'','')
+call s:hi('WarningMsg',s:gui08,s:gui00,s:cterm08,s:cterm00,'','')
+call s:hi('WildMenu',s:gui00,s:gui0D,s:cterm00,s:cterm0D,'','')
+call s:hi('Title',s:gui07,s:gui00,s:cterm07,s:cterm00,'none','')
+call s:hi('Conceal',s:gui06,s:gui00,s:cterm06,s:cterm00,'','')
+call s:hi('Cursor',s:gui00,s:gui05,s:cterm00,s:cterm05,'','')
+call s:hi('NonText',s:gui0E,s:gui01,s:cterm0E,s:cterm01,'','')
+call s:hi('Normal',s:gui05,s:gui00,s:cterm05,s:cterm00,'','')
+call s:hi('LineNr',s:gui04,s:gui01,s:cterm04,s:cterm01,'','')
+hi! link SignColumn LineNr
+call s:hi('StatusLine',s:gui00,s:gui04,s:cterm00,s:cterm04,'none','')
+hi! link StatusLineNC Comment
+call s:hi('VertSplit',s:gui02,s:gui02,s:cterm02,s:cterm02,'none','')
+call s:hi('ColorColumn','',s:gui01,'',s:cterm01,'none','')
+call s:hi('CursorColumn','',s:gui01,'',s:cterm01,'none','')
+call s:hi('CursorLine','',s:gui01,'',s:cterm01,'none','')
+call s:hi('CursorLineNr',s:gui0A,s:gui01,s:cterm0A,s:cterm01,'bold','')
+call s:hi('PMenu',s:gui04,s:gui01,s:cterm04,s:cterm01,'none','')
+call s:hi('PMenuSel',s:gui01,s:gui04,s:cterm01,s:cterm04,'','')
+call s:hi('TabLine',s:gui03,s:gui01,s:cterm03,s:cterm01,'none','')
+call s:hi('TabLineFill',s:gui03,s:gui01,s:cterm03,s:cterm01,'none','')
+call s:hi('TabLineSel',s:gui0B,s:gui01,s:cterm0B,s:cterm01,'none','')
+
+" Standard syntax highlighting
+hi! link Boolean Constant
+hi! link Character Constant
+call s:hi('Comment',s:gui02,'',s:cterm02,'','italic','')
+hi! link Conditional Statement
+call s:hi('Constant',s:gui0A,'',s:cterm0A,'','','')
+hi! link Define PreProc
+call s:hi('Delimiter',s:gui0E,'',s:cterm0E,'','','')
+hi! link Float Number
+call s:hi('Function',s:gui0F,'',s:cterm0F,'','bold','')
+call s:hi('Identifier',s:gui0C,'',s:cterm0C,'','none','')
+hi! link Include PreProc
+hi! link Keyword Statement
+hi! link Label Statement
+call s:hi('Number',s:gui0A,'',s:cterm0A,'','','')
+hi! link Operator Statement
+call s:hi('PreProc',s:gui0F,'',s:cterm0F,'','','')
+hi! link Repeat Statement
+call s:hi('Special',s:gui0B,'',s:cterm0B,'','','')
+hi! link SpecialChar Special
+call s:hi('Statement',s:gui0D,'',s:cterm0D,'','','')
+hi! link StorageClass Type
+call s:hi('String',s:gui0B,s:gui01,s:cterm0B,s:cterm01,'','')
+hi! link Structure Type
+hi! link Tag Special
+call s:hi('Todo',s:gui0A,s:gui01,s:cterm0A,s:cterm01,'bold,reverse','')
+call s:hi('Type',s:gui0E,'',s:cterm0E,'','bold,italic','')
+hi! link Typedef Type
+
+" C highlighting
+hi! link cOperator Operator
+call s:hi('cPreCondit',s:gui0E,'',s:cterm0E,'','','')
+
+" C# highlighting
+hi! link csClass Type
+call s:hi('csAttribute',s:gui0A,'',s:cterm0A,'','','')
+call s:hi('csModifier',s:gui0E,'',s:cterm0E,'','','')
+call s:hi('csType',s:gui08,'',s:cterm08,'','','')
+call s:hi('csUnspecifiedStatement',s:gui0D,'',s:cterm0D,'','','')
+call s:hi('csContextualStatement',s:gui0E,'',s:cterm0E,'','','')
+call s:hi('csNewDecleration',s:gui08,'',s:cterm08,'','','')
+
+" CSS highlighting
+call s:hi('cssBraces','','','','','','')
+hi! link cssClassName Type
+call s:hi('cssColor',s:gui0C,'',s:cterm0C,'','','')
+
+" Diff highlighting
+call s:hi('DiffAdd',s:gui0B,s:gui01,s:cterm0B,s:cterm01,'','')
+call s:hi('DiffChange',s:gui03,s:gui01,s:cterm03,s:cterm01,'','')
+call s:hi('DiffDelete',s:gui08,s:gui01,s:cterm08,s:cterm01,'','')
+call s:hi('DiffText',s:gui0D,s:gui01,s:cterm0D,s:cterm01,'','')
+call s:hi('DiffAdded',s:gui0B,s:gui00,s:cterm0B,s:cterm00,'','')
+call s:hi('DiffFile',s:gui08,s:gui00,s:cterm08,s:cterm00,'','')
+call s:hi('DiffNewFile',s:gui0B,s:gui00,s:cterm0B,s:cterm00,'','')
+call s:hi('DiffLine',s:gui0D,s:gui00,s:cterm0D,s:cterm00,'','')
+call s:hi('DiffRemoved',s:gui08,s:gui00,s:cterm08,s:cterm00,'','')
+
+" Git highlighting
+call s:hi('gitCommitOverflow',s:gui08,'',s:cterm08,'','','')
+call s:hi('gitCommitSummary',s:gui0B,'',s:cterm0B,'','','')
+
+" GitGutter highlighting
+call s:hi('GitGutterAdd',s:gui0B,s:gui01,s:cterm0B,s:cterm01,'','')
+call s:hi('GitGutterChange',s:gui0D,s:gui01,s:cterm0D,s:cterm01,'','')
+call s:hi('GitGutterDelete',s:gui08,s:gui01,s:cterm08,s:cterm01,'','')
+call s:hi('GitGutterChangeDelete',s:gui0E,s:gui01,s:cterm0E,s:cterm01,'','')
+
+" HTML highlighting
+call s:hi('htmlBold',s:gui0A,'',s:cterm0A,'','bold','')
+call s:hi('htmlItalic',s:gui0E,'',s:cterm0E,'','','')
+call s:hi('htmlEndTag',s:gui05,'',s:cterm05,'','','')
+call s:hi('htmlTag',s:gui05,'',s:cterm05,'','','')
+
+" JavaScript highlighting
+call s:hi('javaScript',s:gui05,'',s:cterm05,'','','')
+call s:hi('javaScriptBraces',s:gui05,'',s:cterm05,'','','')
+call s:hi('javaScriptNumber',s:gui09,'',s:cterm09,'','','')
+
+" Mail highlighting
+call s:hi('mailQuoted1',s:gui0A,'',s:cterm0A,'','','')
+call s:hi('mailQuoted2',s:gui0B,'',s:cterm0B,'','','')
+call s:hi('mailQuoted3',s:gui0E,'',s:cterm0E,'','','')
+call s:hi('mailQuoted4',s:gui0C,'',s:cterm0C,'','','')
+call s:hi('mailQuoted5',s:gui0D,'',s:cterm0D,'','','')
+call s:hi('mailQuoted6',s:gui0A,'',s:cterm0A,'','','')
+call s:hi('mailURL',s:gui0D,'',s:cterm0D,'','','')
+call s:hi('mailEmail',s:gui0D,'',s:cterm0D,'','','')
+
+" Markdown highlighting
+call s:hi('markdownCode',s:gui0B,'',s:cterm0B,'','','')
+call s:hi('markdownError',s:gui05,s:gui00,s:cterm05,s:cterm00,'','')
+hi! link markdownCodeBlock markdownCode
+call s:hi('markdownHeadingDelimiter',s:gui0D,'',s:cterm0D,'','','')
+
+" NERDTree highlighting
+call s:hi('NERDTreeDirSlash',s:gui0D,'',s:cterm0D,'','','')
+call s:hi('NERDTreeExecFile',s:gui05,'',s:cterm05,'','','')
+
+" PHP highlighting
+call s:hi('phpMemberSelector',s:gui05,'',s:cterm05,'','','')
+call s:hi('phpComparison',s:gui05,'',s:cterm05,'','','')
+call s:hi('phpParent',s:gui05,'',s:cterm05,'','','')
+
+" Python highlighting
+hi! link pythonOperator Operator
+hi! link pythonRepeat Keyword
+call s:hi('pythonEscape',s:gui09,s:gui01,s:cterm09,s:cterm01,'','')
+
+" Ruby highlighting
+call s:hi('rubyAttribute',s:gui0D,'',s:cterm0D,'','','')
+hi! link rubyConstant Constant
+call s:hi('rubyInterpolation',s:gui0B,'',s:cterm0B,'','','')
+call s:hi('rubyInterpolationDelimiter',s:gui0F,'',s:cterm0F,'','','')
+hi! link rubyLocalVariableOrMethod Identifier
+call s:hi('rubyRegexp',s:gui0C,'',s:cterm0C,'','','')
+hi! link rubySymbol Keyword
+hi! link rubyStringDelimiter Identifier
+
+" SASS highlighting
+hi! link sassChar Character
+hi! link sassClassChar Type
+call s:hi('sassInclude',s:gui0E,'',s:cterm0E,'','','')
+call s:hi('sassMixing',s:gui0E,'',s:cterm0E,'','','')
+call s:hi('sassMixinName',s:gui0D,'',s:cterm0D,'','','')
+
+" Signify highlighting
+hi! link SignifySignAdd GitGutterAdd
+hi! link SignifySignChange GitGutterChange
+hi! link SignifySignDelete GitGutterDelete
+
+" Spelling highlighting
+call s:hi('SpellBad','',s:gui00,'',s:cterm00,'undercurl',s:gui08)
+call s:hi('SpellLocal','',s:gui00,'',s:cterm00,'undercurl',s:gui0C)
+call s:hi('SpellCap','',s:gui00,'',s:cterm00,'undercurl',s:gui0D)
+call s:hi('SpellRare','',s:gui00,'',s:cterm00,'undercurl',s:gui0E)
+
+" Vim highlighting
+hi! link vimFunction Function
+hi! link vimGlobal Identifier
+call s:hi('vimUserFunc',s:gui0F,'',s:cterm0F,'','','')
+hi! link vimSet Constant
+hi! link vimSetEqual vimSet
+
+" Remove functions
+delf <sid>hi
+delf <sid>gui
+delf <sid>cterm
+
+" Remove color variables
+unlet s:gui00 s:gui01 s:gui02 s:gui03  s:gui04  s:gui05  s:gui06  s:gui07  s:gui08  s:gui09 s:gui0A  s:gui0B  s:gui0C  s:gui0D  s:gui0E  s:gui0F
+unlet s:cterm00 s:cterm01 s:cterm02 s:cterm03 s:cterm04 s:cterm05 s:cterm06 s:cterm07 s:cterm08 s:cterm09 s:cterm0A s:cterm0B s:cterm0C s:cterm0D s:cterm0E s:cterm0F
